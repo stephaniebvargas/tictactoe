@@ -13,11 +13,13 @@ const WINNING_COMBINATIONS = [
 const cellElements = document.querySelectorAll('[data-cell]')
 const board = document.getElementById('board')
 const winningMessageElement = document.getElementById('winningMessage')
+const restartButton = document.getElementById('restartButton')
 const winningMessageTextElement = document.querySelector('[data-winning-message-text]')
 let circleTurn
 
-
 startGame()
+
+restartButton.addEventListener('click', startGame)
 
 cellElements.forEach(cell => {
     cell.addEventListener('click', handleClick, {once: true})
@@ -26,9 +28,13 @@ cellElements.forEach(cell => {
 function startGame() {
     circleTurn = false
     cellElements.forEach(cell => {
+        cell.classList.remove(X_CLASS)
+        cell.classList.remove(CIRCLE_CLASS)
+        cell.removeEventListener('click', handleClick)
         cell.addEventListener('click', handleClick, { once: true})
     })
     setBoardHoverClass()
+    winningMessageElement.classList.remove('show')
 }
 
 function handleClick(e) {
@@ -55,7 +61,7 @@ function endGame(draw) {
 }
 
 function isDraw() {
-    return cellElements.every(cell => {
+    return [...cellElements].every(cell => {
         return cell.classList.contains(X_CLASS) ||
         cell.classList.contains(CIRCLE_CLASS)
     })
